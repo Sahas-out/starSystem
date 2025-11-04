@@ -113,7 +113,7 @@ export class Renderer{
       this.orbits = {};
     }
     let verticesArray = new Float32Array(vertices);
-    let vertCount = verticesArray.length;
+    let vertCount = verticesArray.length / 3;
     let bufferOrbit = this.gl.createBuffer();
 
     let vaoOrbit = this.gl.createVertexArray();
@@ -124,7 +124,7 @@ export class Renderer{
 
     this.gl.vertexAttribPointer(Attributes.position,3,this.gl.FLOAT,false,3*4,0);
     
-    this.gl.enableVertexAttribArray(Attributes.normal);
+    this.gl.enableVertexAttribArray(Attributes.position);
 
     this.gl.bindVertexArray(null);
 
@@ -136,7 +136,45 @@ export class Renderer{
     let vaoOrbit = this.orbits[key].vao;
     let nvert = this.orbits[key].nvert;
     this.gl.bindVertexArray(vaoOrbit);
-    this.gl.drawArrays(gl.LINE_LOOP,0,nvert);
+    this.gl.drawArrays(this.gl.LINE_LOOP,0,nvert);
   }
 
+  loadPlanet (vertices,indicies,key) {
+    if (!this.planets) {
+      this.planets = {};
+    }
+
+    let verticiesArray = new Float32Array(vertices); 
+    let indicesArray = new Uint16Array(indicies);
+    let idxCount = indicesArray.length; 
+
+    let planetArrBuf = this.gl.createBuffer();
+    let planetIdxBuf = this.gl.createBuffer();
+
+    let vaoPlanet = this.gl.createVertexArray();
+    this.gl.bindVertexArray(vaoPlanet);
+
+    // binding array buffer after binding vao doesnt change the state of vao its just a good practise   
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER,planetArrBuf);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER,verticiesArray,this.gl.STATIC_DRAW);
+
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER,planetIdxBuf);
+    this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER,indicesArray,this.gl.STATIC_DRAW);
+
+    this.gl.vertexAttribPointer(Attributes.position,3,this.gl.FLOAT,false,8 * 4,0);
+    this.gl.vertexAttribPointer(Attributes.normal,3,this.gl.FLOAT,false,8*4,4*3);
+
+    this.gl.enableVertexAttribArray(Attributes.position);
+    this.gl.enableVertexAttribArray(Attributes.normal);
+
+    this.gl.bindVertexArray(null);
+    this.planets[key] = {vao:vaoPlanet,nIdx: idxCount};
+  }
+
+  drawPlanet (key) {
+    let vaoPlanet = this.planets[key].vao;
+    let nIdx = this.planets[key].nIdx;
+    this.gl.bindVertexArray(vaoPlanet);
+    this.gl.drawElements(this.gl.TRIANGLES,nIdx,this.gl.UNSIGNED_SHORT,0);
+  }
 }

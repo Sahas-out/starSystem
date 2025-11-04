@@ -6,7 +6,7 @@ import { SceneState } from "../models/scene.js";
 export function eventLogic () {
   const scene = getScene();
   if (scene.eventRecord.dragging && scene.state === SceneState.idle) {
-    const quart = getQuartRotation(scene.eventRecord.currDragTBVector,scene.eventRecord.startDragTBVector);
+    const quart = getQuartRotation(scene.eventRecord.startDragTBVector,scene.eventRecord.currDragTBVector);
       scene.camera.quartRotation(quart);
   }
 }

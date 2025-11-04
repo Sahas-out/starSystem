@@ -8,6 +8,24 @@ import { EventRecord } from "../eventHandlers/eventRecord.js";
 import { fragmentShaderSource,vertexShaderSource } from "../renderer/shaderSource.js";
 import { transform1 } from "../math/transformationStrategies.js"
 import { Orbit } from "../models/orbit.js";
+import { Planet } from "../models/planet.js";
+
+function addPlanet (size,obj) {
+  const scene = getScene();
+
+  const orbit = new Orbit(size)
+  .rendererSetUniform(scene.renderer.setUniform.bind(scene.renderer))
+  .rendererDraw(scene.renderer.drawOrbit.bind(scene.renderer))
+  .rendererLoad(scene.renderer.loadOrbit.bind(scene.renderer));
+  
+  const planet = new Planet(obj.vertices, obj.indices)
+  .rendererSetUniform(scene.renderer.setUniform.bind(scene.renderer))
+  .rendererDraw(scene.renderer.drawPlanet.bind(scene.renderer))
+  .rendererLoad(scene.renderer.loadPlanet.bind(scene.renderer));
+
+  planet.addOrbit(orbit);
+  scene.addPlanet(planet);
+}
 
 export async function setup () {
   
@@ -18,7 +36,7 @@ export async function setup () {
   let objects = await mainParser(
     "./modelFiles/try.obj",
   )
-  let starObject = objects[0];
+  let sphereObj = objects[0];
 
   const renderer = new Renderer(canvas)
   .attachVertexShader(vertexShaderSource)
@@ -28,7 +46,7 @@ export async function setup () {
   scene.addRenderer(renderer);
 
 
-  const star = new Star(starObject.vertices, starObject.indices)
+  const star = new Star(sphereObj.vertices, sphereObj.indices)
   .setTransformStrategy(transform1)
   .rendererSetUniform(scene.renderer.setUniform.bind(scene.renderer))
   .rendererDraw(scene.renderer.drawStar.bind(scene.renderer))
@@ -49,10 +67,8 @@ export async function setup () {
   .startListening();
   scene.addEventRecorder(eventRecord);
 
-  const orbit = new Orbit(7,1)
-  .rendererSetUniform(scene.renderer.setUniform.bind(scene.renderer))
-  .rendererDraw(scene.renderer.drawOrbit.bind(scene.renderer))
-  .rendererLoad(scene.renderer.loadOrbit.bind(scene.renderer));
-  
+  addPlanet(7,sphereObj);
+  addPlanet(14,sphereObj);
+
   return scene;
 }

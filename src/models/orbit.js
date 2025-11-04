@@ -3,21 +3,22 @@ import { mat4,vec3,mat3,vec4} from "https://cdn.jsdelivr.net/npm/gl-matrix@3.4.4
 import { Uniforms } from "../renderer/shaderSource.js";
 export class Orbit {
 
-  static ratio = 0.8;
-  static segmentSizeRatio = 2 / 128;
+  static ratio = 0.6;
+  static segmentSizeRatio = 128 / 2;
 
-  constructor (size,key) {
+  constructor (size) {
     this.size = size;
-    this.key = key;
     this.majorSize = this.size / 2;
     this.minorSize = this.majorSize * Orbit.ratio;
     this.segments = this.size * Orbit.segmentSizeRatio;
-    this.color = vec3.fromValues(1.0,1.0,1.0);
+    this.color = vec4.fromValues(1.0,1.0,1.0,1.0);
     this.loaded = false;
+    this.getVertices();
   }
 
   assignKey (key) {
     this.key = key;
+    return this;
   }
 
   getVertices () {
@@ -48,9 +49,10 @@ export class Orbit {
 
   loadOrbit () {
     this.loadFunc(this.getVertices(),this.key);
+    this.loaded = true;
   }
 
-  drawOrbit () {
+  draw () {
     if (!this.loaded) {
       this.loadOrbit(this.key);
     }

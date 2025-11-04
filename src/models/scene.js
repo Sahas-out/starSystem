@@ -12,10 +12,15 @@ export class Scene {
     this.planets = [];
     this.state = SceneState.idle;
   }
+  addPlanet (planet) {
+    let key = this.planets.length;
+    planet.assignKey(key);
+    this.planets.push(planet);
+  }
   addRenderer (renderer) {
     this.renderer = renderer;
     return this;
-  }  
+  } 
   addStar (star) {
     this.star = star;
     return this;

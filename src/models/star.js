@@ -1,6 +1,6 @@
 import { mat4,vec3,mat3,vec4} from "https://cdn.jsdelivr.net/npm/gl-matrix@3.4.4/+esm";
 import { Uniforms } from "../renderer/shaderSource.js";
-import { recalculateNoramlsOutside } from "../utils/recalculateNormalsOutside.js";
+import { recalculateNoramlsOutside, countCloseVertexPairs} from "../utils/recalculateNormalsOutside.js";
 
 export class Star {
 
@@ -11,7 +11,7 @@ export class Star {
     this.scaleVec = vec3.fromValues(1.0,1.0,1.0);
     this.modelMatrix = mat4.create();
     this.ReflectionMatrix = mat3.fromValues(
-      0.2, 0.2, 0.2,
+      0.9, 0.9, 0.9,
       0.7, 0.7, 0.7,
       0.5, 0.5, 0.5
     );
@@ -42,18 +42,21 @@ export class Star {
   }
 
   scale (scaleFactor) {
-    scaleFactor = vec3.fromValues(scaleFactor,scaleFactor,scaleFactor);
-    vec3.add(this.scaleVec,this.scaleVec,this.scaleFactor);
+    vec3.scale(this.scaleVec, this.scaleVec, scaleFactor);
   }
 
   getModelMatrix () {
     return this.transformStrategy(this.scaleVec); 
   }
 
+  loadStar () {
+    this.loadFunc(this.vertices,this.indicies);
+    this.loaded = true;
+  }
+
   draw () {
     if (!this.loaded) {
-      this.loadFunc(this.vertices,this.indicies);
-      this.loaded = true;
+      this.loadStar();
     }
     this.modelMatrix = this.getModelMatrix();
     this.uniformSetter(Uniforms.modelMatrix,this.modelMatrix);
@@ -63,6 +66,5 @@ export class Star {
     this.uniformSetter(Uniforms.is3D,true);
     this.drawFunc();
   }
-
 
 }

@@ -1,25 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas Application</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <div class="container">
-      <div class="main-content">
-        <div class="canvas-section">
-          <div class="canvas-container">
-            <!-- <canvas id="mainCanvas" width="600" height="400">Canvas Element</canvas> -->
-            <canvas id="mainCanvas" width="1000" height="750">Canvas Element</canvas>
-            <div class="resize-handle"></div>
-          </div>
-        </div>
-      </div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Star System Generator </title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="canvas-wrap" role="region" aria-label="WebGL canvas area">
+      <canvas id="mainCanvas"></canvas>
     </div>
+
+    <div class="controls" role="toolbar" aria-label="Canvas controls">
+      <button id="addPlanet" class="btn primary">Add Planet</button>
+      <button id="deletePlanet" class="btn">Delete Planet</button>
+      <button id="view3D" class="btn">3D View</button>
+      <button id="topView" class="btn">Top View</button>
+    </div>
+  </div>
+
+  <script>
+    // Resize the canvas to match CSS size *and* devicePixelRatio
+    (function () {
+      const canvas = document.getElementById('mainCanvas');
+
+      function resizeCanvasToDisplaySize() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        const width = Math.max(1, Math.round(rect.width * dpr));
+        const height = Math.max(1, Math.round(rect.height * dpr));
+
+        if (canvas.width !== width || canvas.height !== height) {
+          canvas.width = width;
+          canvas.height = height;
+          return true;
+        }
+        return false;
+      }
+
+      resizeCanvasToDisplaySize();
+      window.addEventListener('resize', resizeCanvasToDisplaySize);
+    })();
+    </script>
     <script type="module" src="src/main.js"></script>
   </body>
 </html>
-
 
