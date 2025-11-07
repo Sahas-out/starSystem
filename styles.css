@@ -76,6 +76,58 @@ canvas#mainCanvas {
   border-color: rgba(255,255,255,0.22);
 }
 
+.slider {
+  -webkit-appearance: none;
+  width: 150px;
+  height: 6px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.2);
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.slider-label {
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+  margin-right: 6px;
+  user-select: none;
+}
+
+.slider:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+}
+
+.slider-value {
+  min-width: 28px;
+  text-align: center;
+  font-size: 14px;
+  margin-left: 6px;
+  color: rgba(255,255,255,0.8);
+}
+
 @media (max-width: 480px) {
   :root { --controls-height: 72px; }
   .controls { gap: 8px; flex-wrap: wrap; padding: 6px; }

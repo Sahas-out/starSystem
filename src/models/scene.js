@@ -11,6 +11,10 @@ export class Scene {
     this.star = null;
     this.planets = [];
     this.state = SceneState.idle;
+    this.selectedPlanet = null;
+  }
+  addAxes (axes) {
+    this.axes = axes;
   }
   addPlanet (planet) {
     let key = this.planets.length;

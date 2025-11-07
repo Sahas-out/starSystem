@@ -17,10 +17,22 @@
       <button id="deletePlanet" class="btn">Delete Planet</button>
       <button id="view3D" class="btn">3D View</button>
       <button id="topView" class="btn">Top View</button>
+        <label for="valueSlider" class="slider-label">SpeedIncrease%</label>
+        <input 
+          id="valueSlider"
+          type="range"
+          min="0"
+          max="100"
+          value="50"
+          step="1"
+          class="slider"
+          aria-label="Value Adjuster"
+        />
+        <span id="sliderValue" class="slider-value">50</span>
+      </div>
     </div>
-  </div>
 
-  <script>
+    <script>
     // Resize the canvas to match CSS size *and* devicePixelRatio
     (function () {
       const canvas = document.getElementById('mainCanvas');

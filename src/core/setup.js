@@ -9,10 +9,14 @@ import { fragmentShaderSource,vertexShaderSource } from "../renderer/shaderSourc
 import { transform1 } from "../math/transformationStrategies.js"
 import { Orbit } from "../models/orbit.js";
 import { Planet } from "../models/planet.js";
+import { planetsMetaData } from "../utils/customPlanetsMetaData.js";
+import { Axes} from "../models/axes.js";
+import { PlanetShape } from "../models/planet.js";  
 
-function addPlanet (size,obj) {
+
+function addPlanet (shape,size,color,speed,state,objMap) {
   const scene = getScene();
-
+  const obj = objMap[shape];
   const orbit = new Orbit(size)
   .rendererSetUniform(scene.renderer.setUniform.bind(scene.renderer))
   .rendererDraw(scene.renderer.drawOrbit.bind(scene.renderer))
@@ -21,7 +25,10 @@ function addPlanet (size,obj) {
   const planet = new Planet(obj.vertices, obj.indices)
   .rendererSetUniform(scene.renderer.setUniform.bind(scene.renderer))
   .rendererDraw(scene.renderer.drawPlanet.bind(scene.renderer))
-  .rendererLoad(scene.renderer.loadPlanet.bind(scene.renderer));
+  .rendererLoad(scene.renderer.loadPlanet.bind(scene.renderer))
+  .setSpeed(speed)
+  .setColor(...color)
+  .setState(state)
 
   planet.addOrbit(orbit);
   scene.addPlanet(planet);
@@ -33,11 +40,18 @@ export async function setup () {
 
   const canvas = document.getElementById("mainCanvas");
   
-  let objects = await mainParser(
-    "./modelFiles/try.obj",
+  const [sphereObj,regularSolid1,cube,regularSolid2] = await mainParser(
+    "./modelFiles/sphere.obj",
+    "./modelFiles/regularSolid1.obj",
+    "./modelFiles/cube.obj",
+    "./modelFiles/regularSolid2.obj",
   )
-  let sphereObj = objects[0];
-
+  const objMap  = {
+    [PlanetShape.sphere] : sphereObj,
+    [PlanetShape.cube] : cube,
+    [PlanetShape.regularSolid1] : regularSolid1,
+    [PlanetShape.regularSolid2] : regularSolid2,
+  }
   const renderer = new Renderer(canvas)
   .attachVertexShader(vertexShaderSource)
   .attachFragmentShader(fragmentShaderSource)
@@ -67,8 +81,15 @@ export async function setup () {
   .startListening();
   scene.addEventRecorder(eventRecord);
 
-  addPlanet(7,sphereObj);
-  addPlanet(14,sphereObj);
+  const axes = new Axes()
+  .rendererSetUniform(scene.renderer.setUniform.bind(scene.renderer))
+  .rendererDrawFunc(scene.renderer.drawAxes.bind(scene.renderer))
+  .rendererLoadFunc(scene.renderer.loadAxes.bind(scene.renderer));
+  scene.addAxes(axes);
 
+  for (const p of planetsMetaData) {
+    addPlanet(p.shape,p.size,p.color,p.speed,p.state,objMap);
+  }
+  
   return scene;
 }

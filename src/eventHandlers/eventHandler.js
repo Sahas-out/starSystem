@@ -1,11 +1,10 @@
-import { getScene } from "../models/scene.js";
-import { ViewKind } from "../models/camera.js";
-
 export function eventListner (eventRecord) {
 
   const canvas = document.getElementById("mainCanvas");
+  const speedSlider = document.getElementById("valueSlider");
+  const speedValue = document.getElementById("sliderValue");
   canvas.addEventListener('mousedown', (e) => {
-    eventRecord.startDrag = eventRecord.getMousePosCanvas(e);
+    eventRecord.startDrag = eventRecord.getMouseNDC(e);
     eventRecord.startDragTBVector = eventRecord.getTrackballVector(e);
     eventRecord.currDragTBVector = eventRecord.startDragTBVector;
     eventRecord.dragging = true;
@@ -13,7 +12,7 @@ export function eventListner (eventRecord) {
 
   canvas.addEventListener("mousemove",(e) =>{
     if (!eventRecord.dragging) return;
-    eventRecord.currDrag = eventRecord.getMousePosCanvas(e);
+    eventRecord.currDrag = eventRecord.getMouseNDC(e);
     eventRecord.currDragTBVector = eventRecord.getTrackballVector(e);
   });
 
@@ -21,26 +20,33 @@ export function eventListner (eventRecord) {
     eventRecord.dragging = false;
   });
 
-  addPlanet.addEventListener('click', () => {
+  canvas.addEventListener("click", (e) => {
+    eventRecord.clicked = true;
+    eventRecord.clickPos = eventRecord.getMouseNDC(e);
   });
 
-  deletePlanet.addEventListener('click',() => {
+  canvas.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    eventRecord.scroll = e.deltaY;
+    eventRecord.scrolling = true;
 
+  },{"passive":false});
+
+  addPlanet.addEventListener('click', () => {
+    eventRecord.addPlanet = true;
+  });
+  
+  deletePlanet.addEventListener('click',() => {
+    eventRecord.deletePlanet = true;
   });
 
 
   view3D.addEventListener('click',() => {
-    const scene = getScene();
-    if (scene.camera.viewKind !== ViewKind.view3D) {
-      scene.camera.setViewKind(ViewKind.view3D);
-    }
+    eventRecord.view3D = true;
   });
 
   topView.addEventListener('click',() => {
-    const scene = getScene();
-    if (scene.camera.viewKind !== ViewKind.topView) {
-      scene.camera.setViewKind(ViewKind.topView);
-    }
+    eventRecord.topView = true;
   });
 
 }

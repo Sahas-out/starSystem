@@ -1,19 +1,19 @@
 import { mat4,vec3,mat3,vec4} from "https://cdn.jsdelivr.net/npm/gl-matrix@3.4.4/+esm";
 import { Uniforms } from "../renderer/shaderSource.js";
-import { recalculateNoramlsOutside, countCloseVertexPairs} from "../utils/recalculateNormalsOutside.js";
+import { recalculateNoramlsOutside } from "../utils/recalculateNormalsOutside.js";
 
 export class Star {
 
   constructor(inVertices,inIndicies) {
-    recalculateNoramlsOutside(inVertices);
+    // recalculateNoramlsOutside(inVertices);
     this.vertices = inVertices;
     this.indicies = inIndicies;
-    this.scaleVec = vec3.fromValues(1.0,1.0,1.0);
+    this.scaleVec = vec3.fromValues(1.1,1.1,1.1);
     this.modelMatrix = mat4.create();
     this.ReflectionMatrix = mat3.fromValues(
       0.9, 0.9, 0.9,
-      0.7, 0.7, 0.7,
-      0.5, 0.5, 0.5
+      0.0, 0.0, 0.0,
+      0.0, 0.0, 0.0
     );
     this.loaded = false;
     this.shininess = 1.0;

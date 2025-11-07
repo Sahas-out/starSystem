@@ -177,4 +177,24 @@ export class Renderer{
     this.gl.bindVertexArray(vaoPlanet);
     this.gl.drawElements(this.gl.TRIANGLES,nIdx,this.gl.UNSIGNED_SHORT,0);
   }
+
+  loadAxes (vertices) {
+    let verticesArray = new Float32Array(vertices);
+    let buffer = this.gl.createBuffer();
+    
+    this.vaoAxes = this.gl.createVertexArray();
+    this.gl.bindVertexArray(this.vaoAxes);
+
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER,buffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER,verticesArray,this.gl.STATIC_DRAW);
+
+    this.gl.vertexAttribPointer(Attributes.position,3,this.gl.FLOAT,false,3*4,0);
+    this.gl.enableVertexAttribArray(Attributes.position);
+    this.gl.bindVertexArray(null);
+  }
+
+  drawAxes (axis) {
+    this.gl.bindVertexArray(this.vaoAxes);
+    this.gl.drawArrays(this.gl.LINES,axis * 2,2);
+  }
 }

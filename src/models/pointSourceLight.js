@@ -8,7 +8,8 @@ export class PointLightSource {
     // this.position = vec3.fromValues(2.0, 2.0, 2.0);
     this.ambientIntensity = vec3.fromValues(1.0,1.0,1.0);
     // this.ambientIntensity = vec3.fromValues(0.2,0.2,0.2);
-    this.directIntensity = vec3.fromValues(1.0,1.0,1.0);
+    // this.directIntensity = vec3.fromValues(1.0,1.0,1.0);
+    this.directIntensity = vec3.fromValues(0.6,0.6,0.6);
     this.attenuationCoefficents = vec3.fromValues(1.0,1.0,1.0);
   }
 

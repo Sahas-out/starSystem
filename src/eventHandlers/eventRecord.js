@@ -8,8 +8,16 @@ export class EventRecord  {
     this.clickPos = null;
     this.scroll = null;
     this.dragging = false;
+    this.clicked = false;
+    this.scrolling = false;
     this.startDragTBVector = null;
     this.currDragTBVector = null;
+    this.addPlanet = false;
+    this.deletePlanet = false;
+    this.view3D = false;
+    this.topView = false;
+    this.speedSlider = document.getElementById("valueSlider");
+    this.speedValue = document.getElementById("sliderValue");
     this.canvas = document.getElementById("mainCanvas");
   }
   startListening () {
@@ -17,11 +25,11 @@ export class EventRecord  {
     return this;
   }
 
-  getMousePosCanvas(e){
+  getMouseNDC(event) {
     const rect = this.canvas.getBoundingClientRect();
-    return [
-      e.clientX - rect.left, 
-      rect.height - (e.clientY - rect.top)];
+    const x = ((event.clientX - rect.left) / this.canvas.width) * 2 - 1;
+    const y = -((event.clientY - rect.top) / this.canvas.height) * 2 + 1;
+    return [x, y];
   }
 
   getTrackballVector(event) {

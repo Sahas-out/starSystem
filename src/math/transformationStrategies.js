@@ -1,4 +1,4 @@
-import { mat4,vec3,mat3,quat} from "https://cdn.jsdelivr.net/npm/gl-matrix@3.4.4/+esm";
+import { mat4,vec3,mat3,quat,vec4} from "https://cdn.jsdelivr.net/npm/gl-matrix@3.4.4/+esm";
 
 export function transform1 (scaleVec) {
   let modelMatrix = mat4.create();
@@ -43,6 +43,13 @@ export function generateProjectionMatrix (fov,aspectRatio,near,far) {
     far);
   return projectionMatrix;
 }
+
+export function generateOrthoProjection (left, right, bottom, top, near, far) {
+  const projectionMatrix = mat4.create();
+  mat4.ortho(projectionMatrix, left, right, bottom, top, near, far);
+  return projectionMatrix;
+}
+
 
 export function generateOrbitVertices (majorSize,minorSize,segments) {
   let vertices = [];
@@ -110,3 +117,44 @@ export function planetRevolve (theta, speed, minorSize, majorSize) {
   )
   return [newPos,newTheta];
 }
+
+export function getPickingRay(ndcX, ndcY, viewMatrix, projectionMatrix) {
+  // Inverse of combined matrix
+  const invVP = mat4.create();
+  mat4.multiply(invVP, projectionMatrix, viewMatrix);
+  mat4.invert(invVP, invVP);
+
+  // Start and end points in clip space
+  const pNear = vec4.fromValues(ndcX, ndcY, -1.0, 1.0);
+  const pFar  = vec4.fromValues(ndcX, ndcY,  1.0, 1.0);
+
+  // Unproject to world space
+  vec4.transformMat4(pNear, pNear, invVP);
+  vec4.transformMat4(pFar,  pFar,  invVP);
+
+  // Divide by w to get real world coordinates
+  for (let p of [pNear, pFar]) {
+    p[0] /= p[3]; p[1] /= p[3]; p[2] /= p[3];
+  }
+
+  // Ray = origin + t * direction
+  const origin = vec3.fromValues(pNear[0], pNear[1], pNear[2]);
+  const dir = vec3.create();
+  vec3.sub(dir, vec3.fromValues(pFar[0], pFar[1], pFar[2]), origin);
+  vec3.normalize(dir, dir);
+
+  return { origin, dir };
+}
+
+export function raySphereIntersect(rayOrigin, rayDir, sphereCenter, radius) {
+  const oc = vec3.create();
+  vec3.sub(oc, rayOrigin, sphereCenter);
+
+  const a = vec3.dot(rayDir, rayDir);
+  const b = 2.0 * vec3.dot(oc, rayDir);
+  const c = vec3.dot(oc, oc) - radius * radius;
+
+  const discriminant = b * b - 4 * a * c;
+  return discriminant > 0; // true → ray hit sphere
+}
+

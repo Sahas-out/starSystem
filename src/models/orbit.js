@@ -4,7 +4,7 @@ import { Uniforms } from "../renderer/shaderSource.js";
 export class Orbit {
 
   static ratio = 0.6;
-  static segmentSizeRatio = 128 / 2;
+  static segmentSizeRatio = 256 / 2;
 
   constructor (size) {
     this.size = size;

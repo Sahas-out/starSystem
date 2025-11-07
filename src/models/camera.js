@@ -13,12 +13,14 @@ export class Camera {
 
     this.center = vec3.fromValues(0.0,0.0,0.0);
     this.up = vec3.fromValues(0.0,1.0,0.0);
-    this.topEye = vec3.fromValues(0.0,7.0,0.0);
 
-    this.fov = Math.PI / 1.5;
+    this.topEye = vec3.fromValues(0.0,25.0,0.0);
+
+    // this.fov = Math.PI / 3; 
+    this.fov = 60 * Math.PI / 180 
     this.near = 0.1;
-    this.far = 10.0; 
-    this.aspectRatio = 1;// change this to canvas height/canvas width
+    this.far = 60.0; 
+    this.aspectRatio = 1;
 
     this.viewKind = ViewKind.view3D;
     this.translateVec = this.topEye;

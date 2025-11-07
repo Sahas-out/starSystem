@@ -35,7 +35,8 @@ void main() {
     vPositionWorld = pWorld.xyz;
 
     // compute normal matrix on GPU (mat3 of model's top-left)
-    mat3 nMat = mat3(transpose(inverse(uModelMatrix)));
+    // mat3 nMat = mat3(transpose(inverse(uModelMatrix)));
+    mat3 nMat = transpose(inverse(mat3(uModelMatrix)));
     vNormal = uIs3D ? normalize(nMat * aNormal) : vec3(0.0,1.0,0.0);
 
     gl_Position = uProjectionMatrix * uViewMatrix * pWorld;
@@ -86,7 +87,7 @@ void main() {
     vec3 specular = Id * ks * specFactor;
 
     vec3 color = ambient + diffuse + specular;
-    color = clamp(color, 0.0, 1.0);
+    // color = clamp(color, 0.0, 1.0);
 
     outColor = vec4(color, 1.0);
 }
