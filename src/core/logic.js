@@ -49,7 +49,7 @@ export function eventLogic () {
   }
 
   if (scene.eventRecord.scrolling && scene.state === SceneState.editing && scene.selectedPlanet) {
-    let wheelSensitivity = 0.000000000001/138;
+    let wheelSensitivity = 0.1/138;
     scene.selectedPlanet.scale(scene.eventRecord.scroll * wheelSensitivity);
   }
 

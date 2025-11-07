@@ -26,7 +26,6 @@ export class Planet {
     this.scaleVec = vec3.fromValues(0.7,0.7,0.7);
     this.quatRotation = quat.create();
     this.colorVec = vec4.fromValues(1.0,0.0,0.0,1.0);
-    // this.selectedColorVec = vec4.fromValues(0.0,1.0,0.0,1.0);
     this.selectedColorVec = vec4.fromValues(1.0,1.0,1.0,1.0);
 
     this.reflectionMatrix = mat3.fromValues(
@@ -84,7 +83,8 @@ export class Planet {
   }
 
   scale (scaleFactor) {
-    vec3.scale(this.scaleVec, this.scaleVec, scaleFactor);
+    let scaler = vec3.fromValues(scaleFactor,scaleFactor,scaleFactor);
+    vec3.add(this.scaleVec, this.scaleVec, scaler);
   }
 
   quatRotate (q) {
